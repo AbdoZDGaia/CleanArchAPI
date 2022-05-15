@@ -6,6 +6,10 @@ using System.Text;
 using NLog;
 using Contracts;
 using LoggerService;
+using Repository;
+using Service.Contracts;
+using Service;
+using Microsoft.EntityFrameworkCore;
 
 namespace JWTAuthAPI.Extensions
 {
@@ -19,12 +23,35 @@ namespace JWTAuthAPI.Extensions
         {
             var services = builder.Services;
             var config = builder.Configuration;
-            
-            AddLogging(services);
+
             ConfigureJson(services);
+            ConfigureRepositoryManager(services);
+            ConfigureServiceManager(services);
+            ConfigureSqlContext(services, config);
             services.AddControllers();
+            AddLogging(services);
             AddSwagger(services);
             AddAuthentication(services);
+        }
+
+        private static void ConfigureSqlContext(IServiceCollection services, IConfiguration config)
+        {
+            //services.AddDbContext<RepositoryContext>(opts =>
+            //{
+            //    opts.UseSqlServer(config.GetConnectionString("sqlConnection"));
+            //});
+            services.AddSqlServer<RepositoryContext>(
+                config.GetConnectionString("sqlConnection"));
+        }
+
+        private static void ConfigureServiceManager(IServiceCollection services)
+        {
+            services.AddScoped<IServiceManager, ServiceManager>();
+        }
+
+        private static void ConfigureRepositoryManager(IServiceCollection services)
+        {
+            services.AddScoped<IRepositoryManager, RepositoryManager>();
         }
 
         private static void AddLogging(IServiceCollection services)
