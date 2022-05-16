@@ -10,7 +10,10 @@ namespace JWTAuthAPI
         {
             // Source --> Destination
             CreateMap<Restaurant, RestaurantDto>()
-                .ForMember(r => r.Id, opt => opt.MapFrom(r => r.Id));
+                .ForCtorParam("Id", opt => opt.MapFrom(r => r.Id));
+
+            CreateMap<Customer, CustomerDto>()
+                .ForCtorParam("Id", opt => opt.MapFrom(r => r.Id));
         }
     }
 }
