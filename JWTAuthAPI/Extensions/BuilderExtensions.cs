@@ -45,9 +45,10 @@ namespace JWTAuthAPI.Extensions
             services.AddControllers(config =>
             {
                 config.RespectBrowserAcceptHeader = true;
-                config.ReturnHttpNotAcceptable = true;                
+                config.ReturnHttpNotAcceptable = true;
             })
                 .AddXmlDataContractSerializerFormatters()
+                .AddCustomCSVFormatter()
                 .AddApplicationPart(typeof(Presentation.AssemblyReference).Assembly);
         }
 
