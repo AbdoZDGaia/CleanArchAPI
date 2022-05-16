@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
+using Shared.DataTransferObjects;
 
 namespace Presentation.Controllers
 {
@@ -21,11 +22,23 @@ namespace Presentation.Controllers
             return Ok(restaurants);
         }
 
-        [HttpGet("{id:guid}")]
+        [HttpGet("{id:guid}", Name = "RestaurantById")]
         public IActionResult GetRestaurant(Guid id)
         {
             var restaurant = _service.RestaurantService.GetRestaurantById(id, trackChanges: false);
             return Ok(restaurant);
+        }
+
+        [HttpPost]
+        public IActionResult CreateRestaurant([FromBody] RestaurantForCreationDto restaurant)
+        {
+            if (restaurant is null)
+            {
+                return BadRequest("RestaurantForCreationDto object is null");
+            }
+
+            var createdRestaurant = _service.RestaurantService.CreateRestaurant(restaurant);
+            return CreatedAtRoute("RestaurantById", new { id = createdRestaurant.Id }, createdRestaurant);
         }
     }
 }

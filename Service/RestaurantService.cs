@@ -22,6 +22,18 @@ namespace Service
             _mapper = mapper;
         }
 
+        public RestaurantDto CreateRestaurant(RestaurantForCreationDto restaurant)
+        {
+            var restaurantEntity = _mapper.Map<Restaurant>(restaurant);
+
+            _repositoryManager.Restaurant.CreateRestaurant(restaurantEntity);
+            _repositoryManager.Save();
+
+            var restaurantToReturn = _mapper.Map<RestaurantDto>(restaurantEntity);
+            
+            return restaurantToReturn;
+        }
+
         public IEnumerable<RestaurantDto> GetAllRestaurants(bool trackChanges)
         {
             var restaurants = _repositoryManager.Restaurant.GetAllRestaurants(trackChanges);
@@ -34,7 +46,7 @@ namespace Service
             var restaurant = _repositoryManager.Restaurant.GetRestaurant(id, trackChanges);
             if (restaurant is null)
                 throw new RestaurantNotFoundException(id);
-            
+
             var restaurantDto = _mapper.Map<RestaurantDto>(restaurant);
             return restaurantDto;
         }

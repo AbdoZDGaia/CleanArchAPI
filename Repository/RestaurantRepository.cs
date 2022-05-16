@@ -9,6 +9,8 @@ namespace Repository
         {
         }
 
+        public void CreateRestaurant(Restaurant restaurant) => Create(restaurant);
+
         public IEnumerable<Restaurant> GetAllRestaurants(bool trackChanges)
         {
             return FindAll(trackChanges)

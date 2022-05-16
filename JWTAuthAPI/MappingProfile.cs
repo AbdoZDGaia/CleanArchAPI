@@ -16,6 +16,8 @@ namespace JWTAuthAPI
             CreateMap<Customer, CustomerDto>()
                 .ForMember(c => c.Id
                 , opt => opt.MapFrom(r => r.Id));
+
+            CreateMap<RestaurantForCreationDto, Restaurant>();
         }
     }
 }
