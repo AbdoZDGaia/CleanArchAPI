@@ -28,10 +28,16 @@ namespace JWTAuthAPI.Extensions
             ConfigureRepositoryManager(services);
             ConfigureServiceManager(services);
             ConfigureSqlContext(services, config);
-            services.AddControllers();
+            ConfigureControllers(services);
             AddLogging(services);
             AddSwagger(services);
             AddAuthentication(services);
+        }
+
+        private static void ConfigureControllers(IServiceCollection services)
+        {
+            services.AddControllers()
+                            .AddApplicationPart(typeof(Presentation.AssemblyReference).Assembly);
         }
 
         private static void ConfigureSqlContext(IServiceCollection services, IConfiguration config)

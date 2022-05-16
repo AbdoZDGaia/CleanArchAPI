@@ -1,4 +1,4 @@
-﻿namespace JWTAuthAPI.Models
+﻿namespace Entities.Models
 {
     public class LoginModel
     {

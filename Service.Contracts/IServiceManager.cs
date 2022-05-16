@@ -4,5 +4,6 @@
     {
         IRestaurantService RestaurantService { get; }
         ICustomerService CustomerService { get; }
+        IAuthenticationService AuthenticationService { get; }
     }
 }

@@ -1,42 +1,29 @@
 ﻿using Contracts;
-using JWTAuthAPI.Models;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+using Entities.Models;
 using Microsoft.IdentityModel.Tokens;
+using Service.Contracts;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace JWTAuthAPI.Controllers
+namespace Service
 {
-    [AllowAnonymous]
-    [ApiController]
-    [Route("api/[controller]")]
-    public class AuthenticationController : ControllerBase
+    public class AuthenticationService : IAuthenticationService
     {
         private readonly string _issuer = Environment.GetEnvironmentVariable("JwtIssuer") ?? "https://localhost:5001";
         private readonly string _audience = Environment.GetEnvironmentVariable("JwtAudience") ?? "https://localhost:5001";
         private readonly string _signingKey = Environment.GetEnvironmentVariable("JwtSigningKey") ?? "SuperSecretKey@345";
         private readonly ILoggerManager _logger;
 
-        public AuthenticationController(ILoggerManager logger)
+        public AuthenticationService(ILoggerManager loggerManager)
         {
-            _logger = logger;
+            _logger = loggerManager;
         }
 
-        [HttpPost("login")]
-        public IActionResult Login(LoginModel user)
+        public string Login(LoginModel user)
         {
             try
             {
-                _logger.LogInfo($"{typeof(AuthenticationController)} requesting login for username {user.UserName}, using password {user.Password}");
-
-                if (user is null)
-                {
-                    _logger.LogWarn("Invalid login request");
-                    return BadRequest("Invalid client request");
-                }
-
                 if (user.UserName == "admin" && user.Password == "admin")
                 {
                     _logger.LogInfo($"Login successful for username {user.UserName}, using password {user.Password}");
@@ -52,15 +39,15 @@ namespace JWTAuthAPI.Controllers
                     );
                     var tokenString = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
                     _logger.LogInfo($"Token issued is: {tokenString}");
-                    return Ok(new { Token = tokenString });
+                    return tokenString;
                 }
-                _logger.LogWarn($"Invalid login request for user {user.UserName}, invalid credentials");
-                return BadRequest("Invalid username or password");
+                _logger.LogError($"Invalid login request for user {user.UserName}, invalid credentials");
+                return "Invalid username or password";
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                return StatusCode(500, "Internal server error");
+                return "Internal server error";
             }
         }
     }
