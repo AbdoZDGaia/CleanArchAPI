@@ -42,8 +42,13 @@ namespace JWTAuthAPI.Extensions
 
         private static void ConfigureControllers(IServiceCollection services)
         {
-            services.AddControllers()
-                            .AddApplicationPart(typeof(Presentation.AssemblyReference).Assembly);
+            services.AddControllers(config =>
+            {
+                config.RespectBrowserAcceptHeader = true;
+                config.ReturnHttpNotAcceptable = true;                
+            })
+                .AddXmlDataContractSerializerFormatters()
+                .AddApplicationPart(typeof(Presentation.AssemblyReference).Assembly);
         }
 
         private static void ConfigureSqlContext(IServiceCollection services, IConfiguration config)

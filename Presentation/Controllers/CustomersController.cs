@@ -22,8 +22,15 @@ namespace Presentation.Controllers
         [HttpGet]
         public IActionResult GetCustomersForRestaurant(Guid restaurantId)
         {
-            var customers = _service.CustomerService.GetCustomers(restaurantId, trackChanges: false);
+            var customers = _service.CustomerService.GetAllCustomers(restaurantId, trackChanges: false);
             return Ok(customers);
+        }
+
+        [HttpGet("{id:guid}")]
+        public IActionResult GetCustomerForRestaurant(Guid restaurantId, Guid id)
+        {
+            var customer = _service.CustomerService.GetCustomer(restaurantId, id, trackChanges: false);
+            return Ok(customer);
         }
     }
 }

@@ -15,5 +15,12 @@ namespace Repository
                 .OrderBy(c => c.Name)
                 .ToList();
         }
+
+        public Customer? GetCustomer(Guid restaurantId, Guid id, bool trackChanges)
+        {
+            return FindByCondition(c => c.Id.Equals(id)
+            && c.RestaurantId.Equals(restaurantId), trackChanges)
+                .SingleOrDefault();
+        }
     }
 }

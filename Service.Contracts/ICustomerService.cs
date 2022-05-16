@@ -4,6 +4,7 @@ namespace Service.Contracts
 {
     public interface ICustomerService
     {
-        IEnumerable<CustomerDto> GetCustomers(Guid restaurantId, bool trackChanges);
+        IEnumerable<CustomerDto> GetAllCustomers(Guid restaurantId, bool trackChanges);
+        CustomerDto GetCustomer(Guid restaurantId, Guid id, bool trackChanges);
     }
 }
