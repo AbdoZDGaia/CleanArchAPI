@@ -15,5 +15,11 @@ namespace Repository
                 .OrderBy(restaurant => restaurant.Name)
                 .ToList();
         }
+
+        public Restaurant? GetRestaurant(Guid id, bool trackChanges)
+        {
+            return FindByCondition(r => r.Id.Equals(id), trackChanges)
+                .SingleOrDefault();
+        }
     }
 }

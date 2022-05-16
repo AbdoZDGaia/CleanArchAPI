@@ -1,4 +1,4 @@
-﻿namespace Entities.Models
+﻿namespace Shared.Models
 {
     public class LoginModel
     {

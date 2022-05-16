@@ -1,4 +1,5 @@
-﻿using Contracts;
+﻿using AutoMapper;
+using Contracts;
 using Service.Contracts;
 
 namespace Service
@@ -9,16 +10,18 @@ namespace Service
         private readonly Lazy<ICustomerService> _customerService;
         private readonly Lazy<IAuthenticationService> _authenticationService;
 
-        public ServiceManager(IRepositoryManager repositoryManager, ILoggerManager loggerManager)
+        public ServiceManager(IRepositoryManager repositoryManager
+            , ILoggerManager loggerManager
+            , IMapper mapper)
         {
             _restaurantService = new Lazy<IRestaurantService>(
-                () => new RestaurantService(repositoryManager, loggerManager));
+                () => new RestaurantService(repositoryManager, loggerManager, mapper));
             _customerService = new Lazy<ICustomerService>(
-                () => new CustomerService(repositoryManager, loggerManager));
+                () => new CustomerService(repositoryManager, loggerManager, mapper));
             _authenticationService = new Lazy<IAuthenticationService>(
                 () => new AuthenticationService(loggerManager));
         }
-        
+
         public IRestaurantService RestaurantService => _restaurantService.Value;
 
         public ICustomerService CustomerService => _customerService.Value;

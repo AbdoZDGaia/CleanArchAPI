@@ -1,7 +1,7 @@
 ﻿using Contracts;
-using Entities.Models;
 using Microsoft.IdentityModel.Tokens;
 using Service.Contracts;
+using Shared.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;

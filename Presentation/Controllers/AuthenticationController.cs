@@ -1,8 +1,8 @@
 ﻿using Contracts;
-using Entities.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
+using Shared.Models;
 using System.Security.Claims;
 using System.Text;
 

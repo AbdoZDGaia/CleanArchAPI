@@ -17,15 +17,15 @@ namespace Presentation.Controllers
         [HttpGet]
         public IActionResult GetRestaurants()
         {
-            try
-            {
-                var restaurants = _service.RestaurantService.GetAllRestaurants(trackChanges: false);
-                return Ok(restaurants);
-            }
-            catch
-            {
-                return StatusCode(500, "Internal server error");
-            }
+            var restaurants = _service.RestaurantService.GetAllRestaurants(trackChanges: false);
+            return Ok(restaurants);
+        }
+
+        [HttpGet("{id:guid}")]
+        public IActionResult GetRestaurant(Guid id)
+        {
+            var restaurant = _service.RestaurantService.GetRestaurantById(id, trackChanges: false);
+            return Ok(restaurant);
         }
     }
 }

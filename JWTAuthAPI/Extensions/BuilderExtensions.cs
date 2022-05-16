@@ -32,6 +32,12 @@ namespace JWTAuthAPI.Extensions
             AddLogging(services);
             AddSwagger(services);
             AddAuthentication(services);
+            AddAutoMapper(services);
+        }
+
+        private static void AddAutoMapper(IServiceCollection services)
+        {
+            services.AddAutoMapper(typeof(Program));
         }
 
         private static void ConfigureControllers(IServiceCollection services)
