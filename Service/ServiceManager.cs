@@ -19,7 +19,7 @@ namespace Service
             _customerService = new Lazy<ICustomerService>(
                 () => new CustomerService(repositoryManager, loggerManager, mapper));
             _authenticationService = new Lazy<IAuthenticationService>(
-                () => new AuthenticationService(loggerManager));
+                () => new AuthenticationService(repositoryManager));
         }
 
         public IRestaurantService RestaurantService => _restaurantService.Value;
