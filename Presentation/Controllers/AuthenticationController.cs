@@ -1,10 +1,8 @@
 ﻿using Contracts;
+using Entities.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
-using Shared.Models;
-using System.Security.Claims;
-using System.Text;
 
 namespace Presentation.Controllers
 {
@@ -26,23 +24,8 @@ namespace Presentation.Controllers
         [HttpPost("login")]
         public IActionResult Login(LoginModel user)
         {
-            try
-            {
-                _logger.LogInfo($"{typeof(AuthenticationController)} requesting login for username {user.UserName}, using password {user.Password}");
-
-                if (user is null)
-                {
-                    _logger.LogWarn("Invalid login request");
-                    return BadRequest("Invalid login request");
-                }
-                var token = _service.AuthenticationService.Login(user);
-                _logger.LogInfo($"Login Successful, token is: \n{token}");
-                return Ok(new { Token = token });
-            }
-            catch
-            {
-                return StatusCode(500, "Internal server error");
-            }
+            var token = _service.AuthenticationService.Login(user);
+            return Ok(new { Token = token });
         }
     }
 }
