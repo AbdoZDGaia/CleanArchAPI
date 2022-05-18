@@ -9,6 +9,12 @@ namespace Repository
         {
         }
 
+        public void CreateCustomerForRestaurant(Guid restaurantId, Customer customer)
+        {
+            customer.RestaurantId = restaurantId;
+            Create(customer);
+        }
+
         public IEnumerable<Customer> GetAllCustomers(Guid restaurantId, bool trackChanges)
         {
             return FindByCondition(c => c.RestaurantId == restaurantId, trackChanges)

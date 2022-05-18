@@ -6,6 +6,7 @@ namespace Contracts
     {
         IEnumerable<Restaurant> GetAllRestaurants(bool trackChanges);
         Restaurant? GetRestaurant(Guid id, bool trackChanges);
+        IEnumerable<Restaurant> GetRestaurantsByIds(IEnumerable<Guid> ids, bool trackChanges);
         void CreateRestaurant(Restaurant restaurant);
     }
 }

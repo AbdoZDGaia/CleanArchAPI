@@ -6,6 +6,8 @@ namespace Service.Contracts
     {
         IEnumerable<RestaurantDto> GetAllRestaurants(bool trackChanges);
         RestaurantDto GetRestaurantById(Guid id, bool trackChanges);
+        IEnumerable<RestaurantDto> GetRestaurantsByIds(IEnumerable<Guid> ids, bool trackChanges);
         RestaurantDto CreateRestaurant(RestaurantForCreationDto restaurant);
+        (IEnumerable<RestaurantDto> restaurants, string ids) CreateRestaurants(IEnumerable<RestaurantForCreationDto> restaurantCollection);
     }
 }

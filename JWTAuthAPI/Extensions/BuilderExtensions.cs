@@ -10,6 +10,7 @@ using Repository;
 using Service.Contracts;
 using Service;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
 
 namespace JWTAuthAPI.Extensions
 {
@@ -29,10 +30,19 @@ namespace JWTAuthAPI.Extensions
             ConfigureServiceManager(services);
             ConfigureSqlContext(services, config);
             ConfigureControllers(services);
+            ConfigureApiBehavior(services);
             AddLogging(services);
             AddSwagger(services);
             AddAuthentication(services);
             AddAutoMapper(services);
+        }
+
+        private static void ConfigureApiBehavior(IServiceCollection services)
+        {
+            services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true;
+            });
         }
 
         private static void AddAutoMapper(IServiceCollection services)
@@ -82,7 +92,7 @@ namespace JWTAuthAPI.Extensions
 
         private static void ConfigureJson(IServiceCollection services)
         {
-            services.Configure<JsonOptions>(options =>
+            services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(options =>
             {
                 options.SerializerOptions.PropertyNamingPolicy = null;
                 options.SerializerOptions.PropertyNameCaseInsensitive = true;

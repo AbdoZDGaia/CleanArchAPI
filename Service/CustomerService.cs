@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Contracts;
+using Entities;
 using Entities.Exceptions;
 using Service.Contracts;
 using Shared.DataTransferObjects;
@@ -19,6 +20,23 @@ namespace Service
             _repositoryManager = repositoryManager;
             _loggerManager = loggerManager;
             _mapper = mapper;
+        }
+
+        public CustomerDto CreateCustomerForRestaurant(Guid restaurantId, CustomerForCreationDto customerDto, bool trackChanges)
+        {
+            var restaurant = _repositoryManager.Restaurant.GetRestaurant(restaurantId, trackChanges);
+            if (restaurant == null)
+            {
+                throw new RestaurantNotFoundException(restaurantId);
+            }
+
+            var customerEntity = _mapper.Map<Customer>(customerDto);
+
+            _repositoryManager.Customer.CreateCustomerForRestaurant(restaurantId, customerEntity);
+            _repositoryManager.Save();
+
+            var customerToReturn = _mapper.Map<CustomerDto>(customerEntity);
+            return customerToReturn;
         }
 
         public IEnumerable<CustomerDto> GetAllCustomers(Guid restaurantId, bool trackChanges)
@@ -41,7 +59,7 @@ namespace Service
             var customer = _repositoryManager.Customer.GetCustomer(restaurantId, id, trackChanges);
             if (customer is null)
                 throw new CustomerNotFoundException(id);
-            
+
             var customerDto = _mapper.Map<CustomerDto>(customer);
             return customerDto;
         }

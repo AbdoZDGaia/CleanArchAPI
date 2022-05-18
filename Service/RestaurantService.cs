@@ -30,8 +30,28 @@ namespace Service
             _repositoryManager.Save();
 
             var restaurantToReturn = _mapper.Map<RestaurantDto>(restaurantEntity);
-            
+
             return restaurantToReturn;
+        }
+
+        public (IEnumerable<RestaurantDto> restaurants, string ids) CreateRestaurants(IEnumerable<RestaurantForCreationDto> restaurantCollection)
+        {
+            if (restaurantCollection is null)
+            {
+                throw new RestaurantCollectionBadRequest();
+            }
+
+            var restaurantEntities = _mapper.Map<IEnumerable<Restaurant>>(restaurantCollection);
+            foreach (var restaurant in restaurantEntities)
+            {
+                _repositoryManager.Restaurant.CreateRestaurant(restaurant);
+            }
+
+            _repositoryManager.Save();
+
+            var restaurantsToReturn = _mapper.Map<IEnumerable<RestaurantDto>>(restaurantEntities);
+            var ids = string.Join(",", restaurantsToReturn.Select(r => r.Id));
+            return (restaurantsToReturn, ids);
         }
 
         public IEnumerable<RestaurantDto> GetAllRestaurants(bool trackChanges)
@@ -49,6 +69,19 @@ namespace Service
 
             var restaurantDto = _mapper.Map<RestaurantDto>(restaurant);
             return restaurantDto;
+        }
+
+        public IEnumerable<RestaurantDto> GetRestaurantsByIds(IEnumerable<Guid> ids, bool trackChanges)
+        {
+            if (ids is null)
+                throw new IdParametersBadRequestException();
+
+            var restaurantEntities = _repositoryManager.Restaurant.GetRestaurantsByIds(ids, trackChanges);
+            if (ids.Count() != restaurantEntities.Count())
+                throw new CollectionByIdsBadRequestException();
+
+            var restaurantsToReturn = _mapper.Map<IEnumerable<RestaurantDto>>(restaurantEntities);
+            return restaurantsToReturn;
         }
     }
 }

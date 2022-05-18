@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Presentation.ModelBinders;
 using Service.Contracts;
 using Shared.DataTransferObjects;
 
@@ -29,6 +30,14 @@ namespace Presentation.Controllers
             return Ok(restaurant);
         }
 
+        [HttpGet("collection/({ids})", Name = "RestaurantCollection")]
+        public IActionResult GetRestaurantCollection(
+            [ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<Guid> ids)
+        {
+            var restaurants = _service.RestaurantService.GetRestaurantsByIds(ids, trackChanges: false);
+            return Ok(restaurants);
+        }
+
         [HttpPost]
         public IActionResult CreateRestaurant([FromBody] RestaurantForCreationDto restaurant)
         {
@@ -39,6 +48,14 @@ namespace Presentation.Controllers
 
             var createdRestaurant = _service.RestaurantService.CreateRestaurant(restaurant);
             return CreatedAtRoute("RestaurantById", new { id = createdRestaurant.Id }, createdRestaurant);
+        }
+
+        [HttpPost("collection")]
+        public IActionResult CreateRestaurantCollection([FromBody] IEnumerable<RestaurantForCreationDto> restaurants)
+        {
+            var result = _service.RestaurantService.CreateRestaurants(restaurants);
+
+            return CreatedAtRoute("RestaurantCollection", new { result.ids }, result.restaurants);
         }
     }
 }

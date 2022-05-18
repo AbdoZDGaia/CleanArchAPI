@@ -23,5 +23,11 @@ namespace Repository
             return FindByCondition(r => r.Id.Equals(id), trackChanges)
                 .SingleOrDefault();
         }
+
+        public IEnumerable<Restaurant> GetRestaurantsByIds(IEnumerable<Guid> ids, bool trackChanges)
+        {
+            return FindByCondition(r => ids.Contains(r.Id), trackChanges)
+                .ToList();
+        }
     }
 }

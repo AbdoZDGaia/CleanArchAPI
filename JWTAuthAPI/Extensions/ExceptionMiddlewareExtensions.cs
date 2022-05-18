@@ -22,6 +22,7 @@ namespace JWTAuthAPI.Extensions
                     {
                         context.Response.StatusCode = contextFeature.Error switch
                         {
+                            BadRequestException => StatusCodes.Status400BadRequest,
                             NotFoundException => StatusCodes.Status404NotFound,
                             _ => StatusCodes.Status500InternalServerError
                         };
