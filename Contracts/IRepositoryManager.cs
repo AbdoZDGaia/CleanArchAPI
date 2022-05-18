@@ -4,6 +4,7 @@
     {
         IRestaurantRepository Restaurant { get; }
         ICustomerRepository Customer { get; }
+        IAuthenticationRepository Authentication { get; }
         void Save();
     }
 }
