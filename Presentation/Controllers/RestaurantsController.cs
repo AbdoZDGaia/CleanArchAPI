@@ -64,5 +64,17 @@ namespace Presentation.Controllers
             _service.RestaurantService.DeleteRestaurant(id, trackChanges: false);
             return NoContent();
         }
+
+        [HttpPut("{id:guid}")]
+        public IActionResult UpdateRestaurant(Guid id, [FromBody] RestaurantForUpdateDto restaurant)
+        {
+            if (restaurant is null)
+            {
+                return BadRequest("RestaurantForUpdateDto object is null");
+            }
+
+            _service.RestaurantService.UpdateRestaurant(id, restaurant, trackChanges: true);
+            return NoContent();
+        }
     }
 }

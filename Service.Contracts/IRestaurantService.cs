@@ -10,5 +10,6 @@ namespace Service.Contracts
         RestaurantDto CreateRestaurant(RestaurantForCreationDto restaurant);
         (IEnumerable<RestaurantDto> restaurants, string ids) CreateRestaurants(IEnumerable<RestaurantForCreationDto> restaurantCollection);
         void DeleteRestaurant(Guid restaurantId, bool trackChanges);
+        void UpdateRestaurant(Guid restaurantId, RestaurantForUpdateDto restaurant, bool trackChanges);
     }
 }

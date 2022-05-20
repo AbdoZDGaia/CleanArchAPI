@@ -95,5 +95,15 @@ namespace Service
             var restaurantsToReturn = _mapper.Map<IEnumerable<RestaurantDto>>(restaurantEntities);
             return restaurantsToReturn;
         }
+
+        public void UpdateRestaurant(Guid restaurantId, RestaurantForUpdateDto restaurant, bool trackChanges)
+        {
+            var restaurantEntity = _repositoryManager.Restaurant.GetRestaurant(restaurantId, trackChanges);
+            if (restaurantEntity is null)
+                throw new RestaurantNotFoundException(restaurantId);
+
+            _mapper.Map(restaurant, restaurantEntity);
+            _repositoryManager.Save();
+        }
     }
 }

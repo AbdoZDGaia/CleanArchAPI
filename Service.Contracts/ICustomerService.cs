@@ -8,6 +8,7 @@ namespace Service.Contracts
         CustomerDto GetCustomer(Guid restaurantId, Guid id, bool trackChanges);
         CustomerDto CreateCustomerForRestaurant(Guid restaurantId, CustomerForCreationDto customerDto, bool trackChanges);
         void DeleteCustomerForRestaurant(Guid restaurantId, Guid id, bool trackChanges);
+        void UpdateCustomerForRestaurant(Guid restaurantId, Guid id, CustomerForUpdateDto customerDto, bool restTrackChanges, bool custTrackChanges);
 
     }
 }

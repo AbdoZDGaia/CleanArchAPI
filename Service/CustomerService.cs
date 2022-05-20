@@ -10,7 +10,6 @@ namespace Service
     public class CustomerService : ICustomerService
     {
         private readonly IRepositoryManager _repositoryManager;
-        private readonly ILoggerManager _loggerManager;
         private readonly IMapper _mapper;
 
         public CustomerService(IRepositoryManager repositoryManager
@@ -18,7 +17,6 @@ namespace Service
             , IMapper mapper)
         {
             _repositoryManager = repositoryManager;
-            _loggerManager = loggerManager;
             _mapper = mapper;
         }
 
@@ -80,6 +78,24 @@ namespace Service
 
             var customerDto = _mapper.Map<CustomerDto>(customer);
             return customerDto;
+        }
+
+        public void UpdateCustomerForRestaurant(Guid restaurantId, Guid id, CustomerForUpdateDto customerDto, bool restTrackChanges, bool custTrackChanges)
+        {
+            var restaurant = _repositoryManager.Restaurant.GetRestaurant(restaurantId, restTrackChanges);
+            if (restaurant is null)
+            {
+                throw new RestaurantNotFoundException(restaurantId);
+            }
+
+            var customer = _repositoryManager.Customer.GetCustomer(restaurantId, id, custTrackChanges);
+            if (customer is null)
+            {
+                throw new CustomerNotFoundException(id);
+            }
+
+            _mapper.Map(customerDto, customer);
+            _repositoryManager.Save();
         }
     }
 }

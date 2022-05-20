@@ -1,11 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
 using Shared.DataTransferObjects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Presentation.Controllers
 {
@@ -51,6 +46,19 @@ namespace Presentation.Controllers
         public IActionResult DeleteCustomerForRestaurant(Guid restaurantId, Guid id)
         {
             _service.CustomerService.DeleteCustomerForRestaurant(restaurantId, id, trackChanges: false);
+            return NoContent();
+        }
+
+        [HttpPut("{id:guid}")]
+        public IActionResult UpdateCustomerForRestaurant(Guid restaurantId, Guid id, [FromBody] CustomerForUpdateDto customerDto)
+        {
+            if (customerDto == null)
+            {
+                return BadRequest("CustomerForUpdateDto is null");
+            }
+
+            _service.CustomerService.UpdateCustomerForRestaurant(restaurantId, id, customerDto, restTrackChanges: false, custTrackChanges: true);
+
             return NoContent();
         }
     }

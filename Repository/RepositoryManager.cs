@@ -26,7 +26,6 @@ namespace Repository
         }
 
         public IRestaurantRepository Restaurant => _restaurantRepository.Value;
-
         public ICustomerRepository Customer => _customerRepository.Value;
         public IAuthenticationRepository Authentication => _authRepository.Value;
 
