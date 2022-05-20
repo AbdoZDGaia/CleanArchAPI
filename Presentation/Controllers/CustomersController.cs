@@ -46,5 +46,12 @@ namespace Presentation.Controllers
 
             return CreatedAtRoute("GetCustomerForRestaurant", new { restaurantId = restaurantId, id = customerToReturn.Id }, customerToReturn);
         }
+
+        [HttpDelete("{id:guid}")]
+        public IActionResult DeleteCustomerForRestaurant(Guid restaurantId, Guid id)
+        {
+            _service.CustomerService.DeleteCustomerForRestaurant(restaurantId, id, trackChanges: false);
+            return NoContent();
+        }
     }
 }

@@ -54,6 +54,18 @@ namespace Service
             return (restaurantsToReturn, ids);
         }
 
+        public void DeleteRestaurant(Guid restaurantId, bool trackChanges)
+        {
+            var restaurant = _repositoryManager.Restaurant.GetRestaurant(restaurantId, trackChanges);
+            if (restaurant is null)
+            {
+                throw new RestaurantNotFoundException(restaurantId);
+            }
+
+            _repositoryManager.Restaurant.DeleteRestaurant(restaurant);
+            _repositoryManager.Save();
+        }
+
         public IEnumerable<RestaurantDto> GetAllRestaurants(bool trackChanges)
         {
             var restaurants = _repositoryManager.Restaurant.GetAllRestaurants(trackChanges);

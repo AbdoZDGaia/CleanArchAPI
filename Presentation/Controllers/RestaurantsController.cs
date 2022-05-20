@@ -57,5 +57,12 @@ namespace Presentation.Controllers
 
             return CreatedAtRoute("RestaurantCollection", new { result.ids }, result.restaurants);
         }
+
+        [HttpDelete("{id:guid}")]
+        public IActionResult DeleteRestaurant(Guid id)
+        {
+            _service.RestaurantService.DeleteRestaurant(id, trackChanges: false);
+            return NoContent();
+        }
     }
 }

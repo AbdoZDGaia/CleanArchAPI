@@ -11,6 +11,8 @@ namespace Repository
 
         public void CreateRestaurant(Restaurant restaurant) => Create(restaurant);
 
+        public void DeleteRestaurant(Restaurant restaurant) => Delete(restaurant);
+
         public IEnumerable<Restaurant> GetAllRestaurants(bool trackChanges)
         {
             return FindAll(trackChanges)
