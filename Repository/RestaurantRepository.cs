@@ -1,5 +1,6 @@
 ﻿using Contracts;
 using Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Repository
 {
@@ -13,23 +14,23 @@ namespace Repository
 
         public void DeleteRestaurant(Restaurant restaurant) => Delete(restaurant);
 
-        public IEnumerable<Restaurant> GetAllRestaurants(bool trackChanges)
+        public async Task<IEnumerable<Restaurant>> GetAllRestaurants(bool trackChanges)
         {
-            return FindAll(trackChanges)
+            return await FindAll(trackChanges)
                 .OrderBy(restaurant => restaurant.Name)
-                .ToList();
+                .ToListAsync();
         }
 
-        public Restaurant? GetRestaurant(Guid id, bool trackChanges)
+        public async Task<Restaurant?> GetRestaurantAsync(Guid id, bool trackChanges)
         {
-            return FindByCondition(r => r.Id.Equals(id), trackChanges)
-                .SingleOrDefault();
+            return await FindByCondition(r => r.Id.Equals(id), trackChanges)
+                .SingleOrDefaultAsync();
         }
 
-        public IEnumerable<Restaurant> GetRestaurantsByIds(IEnumerable<Guid> ids, bool trackChanges)
+        public async Task<IEnumerable<Restaurant>> GetRestaurantsByIdsAsync(IEnumerable<Guid> ids, bool trackChanges)
         {
-            return FindByCondition(r => ids.Contains(r.Id), trackChanges)
-                .ToList();
+            return await FindByCondition(r => ids.Contains(r.Id), trackChanges)
+                .ToListAsync();
         }
     }
 }

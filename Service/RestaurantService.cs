@@ -22,19 +22,20 @@ namespace Service
             _mapper = mapper;
         }
 
-        public RestaurantDto CreateRestaurant(RestaurantForCreationDto restaurant)
+        public async Task<RestaurantDto> CreateRestaurantAsync(RestaurantForCreationDto restaurant)
         {
             var restaurantEntity = _mapper.Map<Restaurant>(restaurant);
 
             _repositoryManager.Restaurant.CreateRestaurant(restaurantEntity);
-            _repositoryManager.Save();
+            await _repositoryManager.SaveAsync();
 
             var restaurantToReturn = _mapper.Map<RestaurantDto>(restaurantEntity);
 
             return restaurantToReturn;
         }
 
-        public (IEnumerable<RestaurantDto> restaurants, string ids) CreateRestaurants(IEnumerable<RestaurantForCreationDto> restaurantCollection)
+        public async  Task<(IEnumerable<RestaurantDto> restaurants, string ids)> CreateRestaurantsAsync
+            (IEnumerable<RestaurantForCreationDto> restaurantCollection)
         {
             if (restaurantCollection is null)
             {
@@ -47,35 +48,35 @@ namespace Service
                 _repositoryManager.Restaurant.CreateRestaurant(restaurant);
             }
 
-            _repositoryManager.Save();
+            await _repositoryManager.SaveAsync();
 
             var restaurantsToReturn = _mapper.Map<IEnumerable<RestaurantDto>>(restaurantEntities);
             var ids = string.Join(",", restaurantsToReturn.Select(r => r.Id));
             return (restaurantsToReturn, ids);
         }
 
-        public void DeleteRestaurant(Guid restaurantId, bool trackChanges)
+        public async Task DeleteRestaurantAsync(Guid restaurantId, bool trackChanges)
         {
-            var restaurant = _repositoryManager.Restaurant.GetRestaurant(restaurantId, trackChanges);
+            var restaurant = await _repositoryManager.Restaurant.GetRestaurantAsync(restaurantId, trackChanges);
             if (restaurant is null)
             {
                 throw new RestaurantNotFoundException(restaurantId);
             }
 
             _repositoryManager.Restaurant.DeleteRestaurant(restaurant);
-            _repositoryManager.Save();
+            await _repositoryManager.SaveAsync();
         }
 
-        public IEnumerable<RestaurantDto> GetAllRestaurants(bool trackChanges)
+        public async Task<IEnumerable<RestaurantDto>> GetAllRestaurantsAsync(bool trackChanges)
         {
-            var restaurants = _repositoryManager.Restaurant.GetAllRestaurants(trackChanges);
+            var restaurants = await _repositoryManager.Restaurant.GetAllRestaurantsAsync(trackChanges);
             var restaurantsDto = _mapper.Map<IEnumerable<RestaurantDto>>(restaurants);
             return restaurantsDto;
         }
 
-        public RestaurantDto GetRestaurantById(Guid id, bool trackChanges)
+        public async  Task<RestaurantDto> GetRestaurantByIdAsync(Guid id, bool trackChanges)
         {
-            var restaurant = _repositoryManager.Restaurant.GetRestaurant(id, trackChanges);
+            var restaurant = await _repositoryManager.Restaurant.GetRestaurantAsync(id, trackChanges);
             if (restaurant is null)
                 throw new RestaurantNotFoundException(id);
 
@@ -83,12 +84,12 @@ namespace Service
             return restaurantDto;
         }
 
-        public IEnumerable<RestaurantDto> GetRestaurantsByIds(IEnumerable<Guid> ids, bool trackChanges)
+        public async Task<IEnumerable<RestaurantDto>> GetRestaurantsByIdsAsync(IEnumerable<Guid> ids, bool trackChanges)
         {
             if (ids is null)
                 throw new IdParametersBadRequestException();
 
-            var restaurantEntities = _repositoryManager.Restaurant.GetRestaurantsByIds(ids, trackChanges);
+            var restaurantEntities = await _repositoryManager.Restaurant.GetRestaurantsByIdsAsync(ids, trackChanges);
             if (ids.Count() != restaurantEntities.Count())
                 throw new CollectionByIdsBadRequestException();
 
@@ -96,14 +97,14 @@ namespace Service
             return restaurantsToReturn;
         }
 
-        public void UpdateRestaurant(Guid restaurantId, RestaurantForUpdateDto restaurant, bool trackChanges)
+        public async Task UpdateRestaurantAsync(Guid restaurantId, RestaurantForUpdateDto restaurant, bool trackChanges)
         {
-            var restaurantEntity = _repositoryManager.Restaurant.GetRestaurant(restaurantId, trackChanges);
+            var restaurantEntity = await _repositoryManager.Restaurant.GetRestaurantAsync(restaurantId, trackChanges);
             if (restaurantEntity is null)
                 throw new RestaurantNotFoundException(restaurantId);
 
             _mapper.Map(restaurant, restaurantEntity);
-            _repositoryManager.Save();
+            await _repositoryManager.SaveAsync();
         }
     }
 }

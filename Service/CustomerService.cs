@@ -20,9 +20,9 @@ namespace Service
             _mapper = mapper;
         }
 
-        public CustomerDto CreateCustomerForRestaurant(Guid restaurantId, CustomerForCreationDto customerDto, bool trackChanges)
+        public async Task<CustomerDto> CreateCustomerForRestaurantAsync(Guid restaurantId, CustomerForCreationDto customerDto, bool trackChanges)
         {
-            var restaurant = _repositoryManager.Restaurant.GetRestaurant(restaurantId, trackChanges);
+            var restaurant = await _repositoryManager.Restaurant.GetRestaurantAsync(restaurantId, trackChanges);
             if (restaurant == null)
             {
                 throw new RestaurantNotFoundException(restaurantId);
@@ -31,48 +31,48 @@ namespace Service
             var customerEntity = _mapper.Map<Customer>(customerDto);
 
             _repositoryManager.Customer.CreateCustomerForRestaurant(restaurantId, customerEntity);
-            _repositoryManager.Save();
+            await _repositoryManager.SaveAsync();
 
             var customerToReturn = _mapper.Map<CustomerDto>(customerEntity);
             return customerToReturn;
         }
 
-        public void DeleteCustomerForRestaurant(Guid restaurantId, Guid id, bool trackChanges)
+        public async Task DeleteCustomerForRestaurantAsync(Guid restaurantId, Guid id, bool trackChanges)
         {
-            var restaurant = _repositoryManager.Restaurant.GetRestaurant(restaurantId, trackChanges);
+            var restaurant = await _repositoryManager.Restaurant.GetRestaurantAsync(restaurantId, trackChanges);
             if (restaurant == null)
             {
                 throw new RestaurantNotFoundException(restaurantId);
             }
 
-            var customerForRestaurant = _repositoryManager.Customer.GetCustomer(restaurantId, id, trackChanges);
+            var customerForRestaurant = await _repositoryManager.Customer.GetCustomerAsync(restaurantId, id, trackChanges);
             if (customerForRestaurant == null)
             {
                 throw new CustomerNotFoundException(id);
             }
 
             _repositoryManager.Customer.DeleteCustomer(customerForRestaurant);
-            _repositoryManager.Save();
+            await _repositoryManager.SaveAsync();
         }
 
-        public IEnumerable<CustomerDto> GetAllCustomers(Guid restaurantId, bool trackChanges)
+        public async Task<IEnumerable<CustomerDto>> GetAllCustomersAsync(Guid restaurantId, bool trackChanges)
         {
-            var restaurant = _repositoryManager.Restaurant.GetRestaurant(restaurantId, trackChanges);
+            var restaurant = await _repositoryManager.Restaurant.GetRestaurantAsync(restaurantId, trackChanges);
             if (restaurant is null)
                 throw new RestaurantNotFoundException(restaurantId);
 
-            var customers = _repositoryManager.Customer.GetAllCustomers(restaurantId, trackChanges);
+            var customers = await _repositoryManager.Customer.GetAllCustomersAsync(restaurantId, trackChanges);
             var customersDto = _mapper.Map<IEnumerable<CustomerDto>>(customers);
             return customersDto;
         }
 
-        public CustomerDto GetCustomer(Guid restaurantId, Guid id, bool trackChanges)
+        public async Task<CustomerDto> GetCustomerAsync(Guid restaurantId, Guid id, bool trackChanges)
         {
-            var restaurant = _repositoryManager.Restaurant.GetRestaurant(restaurantId, trackChanges);
+            var restaurant = await _repositoryManager.Restaurant.GetRestaurantAsync(restaurantId, trackChanges);
             if (restaurant is null)
                 throw new RestaurantNotFoundException(restaurantId);
 
-            var customer = _repositoryManager.Customer.GetCustomer(restaurantId, id, trackChanges);
+            var customer = await _repositoryManager.Customer.GetCustomerAsync(restaurantId, id, trackChanges);
             if (customer is null)
                 throw new CustomerNotFoundException(id);
 
@@ -80,14 +80,14 @@ namespace Service
             return customerDto;
         }
 
-        public (CustomerForUpdateDto customerToPatch, Customer customerEntity) GetCustomerForPatch
+        public async Task<(CustomerForUpdateDto customerToPatch, Customer customerEntity)> GetCustomerForPatchAsync
             (Guid restaurantId, Guid id, bool restTrackChanges, bool custTrackChanges)
         {
-            var restaurant = _repositoryManager.Restaurant.GetRestaurant(restaurantId, restTrackChanges);
+            var restaurant = await _repositoryManager.Restaurant.GetRestaurantAsync(restaurantId, restTrackChanges);
             if (restaurant is null)
                 throw new RestaurantNotFoundException(restaurantId);
 
-            var customer = _repositoryManager.Customer.GetCustomer(restaurantId, id, custTrackChanges);
+            var customer = await _repositoryManager.Customer.GetCustomerAsync(restaurantId, id, custTrackChanges);
             if (customer is null)
                 throw new CustomerNotFoundException(id);
 
@@ -95,28 +95,28 @@ namespace Service
             return (customerToPatch, customer);
         }
 
-        public void SaveChangesForPatch(CustomerForUpdateDto customerToPatch, Customer customerEntity)
+        public async Task SaveChangesForPatchAsync(CustomerForUpdateDto customerToPatch, Customer customerEntity)
         {
             _mapper.Map(customerToPatch, customerEntity);
-            _repositoryManager.Save();
+            await _repositoryManager.SaveAsync();
         }
 
-        public void UpdateCustomerForRestaurant(Guid restaurantId, Guid id, CustomerForUpdateDto customerDto, bool restTrackChanges, bool custTrackChanges)
+        public async Task UpdateCustomerForRestaurantAsync(Guid restaurantId, Guid id, CustomerForUpdateDto customerDto, bool restTrackChanges, bool custTrackChanges)
         {
-            var restaurant = _repositoryManager.Restaurant.GetRestaurant(restaurantId, restTrackChanges);
+            var restaurant = await _repositoryManager.Restaurant.GetRestaurantAsync(restaurantId, restTrackChanges);
             if (restaurant is null)
             {
                 throw new RestaurantNotFoundException(restaurantId);
             }
 
-            var customer = _repositoryManager.Customer.GetCustomer(restaurantId, id, custTrackChanges);
+            var customer = await _repositoryManager.Customer.GetCustomerAsync(restaurantId, id, custTrackChanges);
             if (customer is null)
             {
                 throw new CustomerNotFoundException(id);
             }
 
             _mapper.Map(customerDto, customer);
-            _repositoryManager.Save();
+            await _repositoryManager.SaveAsync();
         }
     }
 }

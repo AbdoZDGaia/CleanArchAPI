@@ -29,6 +29,6 @@ namespace Repository
         public ICustomerRepository Customer => _customerRepository.Value;
         public IAuthenticationRepository Authentication => _authRepository.Value;
 
-        public void Save() => _repositoryContext.SaveChanges();
+        public async Task SaveAsync() => await _repositoryContext.SaveChangesAsync();
     }
 }

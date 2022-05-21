@@ -17,63 +17,63 @@ namespace Presentation.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetRestaurants()
+        public async Task<IActionResult> GetRestaurants()
         {
-            var restaurants = _service.RestaurantService.GetAllRestaurants(trackChanges: false);
+            var restaurants = await _service.RestaurantService.GetAllRestaurantsAsync(trackChanges: false);
             return Ok(restaurants);
         }
 
         [HttpGet("{id:guid}", Name = "RestaurantById")]
-        public IActionResult GetRestaurant(Guid id)
+        public async Task<IActionResult> GetRestaurant(Guid id)
         {
-            var restaurant = _service.RestaurantService.GetRestaurantById(id, trackChanges: false);
+            var restaurant = await _service.RestaurantService.GetRestaurantByIdAsync(id, trackChanges: false);
             return Ok(restaurant);
         }
 
         [HttpGet("collection/({ids})", Name = "RestaurantCollection")]
-        public IActionResult GetRestaurantCollection(
+        public async Task<IActionResult> GetRestaurantCollection(
             [ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<Guid> ids)
         {
-            var restaurants = _service.RestaurantService.GetRestaurantsByIds(ids, trackChanges: false);
+            var restaurants = await _service.RestaurantService.GetRestaurantsByIdsAsync(ids, trackChanges: false);
             return Ok(restaurants);
         }
 
         [HttpPost]
-        public IActionResult CreateRestaurant([FromBody] RestaurantForCreationDto restaurant)
+        public async Task<IActionResult> CreateRestaurant([FromBody] RestaurantForCreationDto restaurant)
         {
             if (restaurant is null)
             {
                 return BadRequest("RestaurantForCreationDto object is null");
             }
 
-            var createdRestaurant = _service.RestaurantService.CreateRestaurant(restaurant);
+            var createdRestaurant = await _service.RestaurantService.CreateRestaurantAsync(restaurant);
             return CreatedAtRoute("RestaurantById", new { id = createdRestaurant.Id }, createdRestaurant);
         }
 
         [HttpPost("collection")]
-        public IActionResult CreateRestaurantCollection([FromBody] IEnumerable<RestaurantForCreationDto> restaurants)
+        public async Task<IActionResult> CreateRestaurantCollection([FromBody] IEnumerable<RestaurantForCreationDto> restaurants)
         {
-            var result = _service.RestaurantService.CreateRestaurants(restaurants);
+            var result = await _service.RestaurantService.CreateRestaurantsAsync(restaurants);
 
             return CreatedAtRoute("RestaurantCollection", new { result.ids }, result.restaurants);
         }
 
         [HttpDelete("{id:guid}")]
-        public IActionResult DeleteRestaurant(Guid id)
+        public async Task<IActionResult> DeleteRestaurant(Guid id)
         {
-            _service.RestaurantService.DeleteRestaurant(id, trackChanges: false);
+            await _service.RestaurantService.DeleteRestaurantAsync(id, trackChanges: false);
             return NoContent();
         }
 
         [HttpPut("{id:guid}")]
-        public IActionResult UpdateRestaurant(Guid id, [FromBody] RestaurantForUpdateDto restaurant)
+        public async Task<IActionResult> UpdateRestaurant(Guid id, [FromBody] RestaurantForUpdateDto restaurant)
         {
             if (restaurant is null)
             {
                 return BadRequest("RestaurantForUpdateDto object is null");
             }
 
-            _service.RestaurantService.UpdateRestaurant(id, restaurant, trackChanges: true);
+            await _service.RestaurantService.UpdateRestaurantAsync(id, restaurant, trackChanges: true);
             return NoContent();
         }
     }
