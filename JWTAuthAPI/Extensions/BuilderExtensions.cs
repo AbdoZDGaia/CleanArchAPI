@@ -11,6 +11,8 @@ using Service.Contracts;
 using Service;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.Extensions.Options;
 
 namespace JWTAuthAPI.Extensions
 {
@@ -52,10 +54,17 @@ namespace JWTAuthAPI.Extensions
 
         private static void ConfigureControllers(IServiceCollection services)
         {
+            NewtonsoftJsonPatchInputFormatter GetJsonPatchInputFormatter() =>
+                new ServiceCollection().AddLogging().AddMvc().AddNewtonsoftJson()
+                .Services.BuildServiceProvider()
+                .GetRequiredService<IOptions<MvcOptions>>().Value.InputFormatters
+                .OfType<NewtonsoftJsonPatchInputFormatter>().First();
+
             services.AddControllers(config =>
             {
                 config.RespectBrowserAcceptHeader = true;
                 config.ReturnHttpNotAcceptable = true;
+                config.InputFormatters.Insert(0, GetJsonPatchInputFormatter());
             })
                 .AddXmlDataContractSerializerFormatters()
                 .AddCustomCSVFormatter()

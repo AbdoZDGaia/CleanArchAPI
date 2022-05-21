@@ -80,6 +80,27 @@ namespace Service
             return customerDto;
         }
 
+        public (CustomerForUpdateDto customerToPatch, Customer customerEntity) GetCustomerForPatch
+            (Guid restaurantId, Guid id, bool restTrackChanges, bool custTrackChanges)
+        {
+            var restaurant = _repositoryManager.Restaurant.GetRestaurant(restaurantId, restTrackChanges);
+            if (restaurant is null)
+                throw new RestaurantNotFoundException(restaurantId);
+
+            var customer = _repositoryManager.Customer.GetCustomer(restaurantId, id, custTrackChanges);
+            if (customer is null)
+                throw new CustomerNotFoundException(id);
+
+            var customerToPatch = _mapper.Map<CustomerForUpdateDto>(customer);
+            return (customerToPatch, customer);
+        }
+
+        public void SaveChangesForPatch(CustomerForUpdateDto customerToPatch, Customer customerEntity)
+        {
+            _mapper.Map(customerToPatch, customerEntity);
+            _repositoryManager.Save();
+        }
+
         public void UpdateCustomerForRestaurant(Guid restaurantId, Guid id, CustomerForUpdateDto customerDto, bool restTrackChanges, bool custTrackChanges)
         {
             var restaurant = _repositoryManager.Restaurant.GetRestaurant(restaurantId, restTrackChanges);

@@ -1,4 +1,5 @@
-﻿using Shared.DataTransferObjects;
+﻿using Entities;
+using Shared.DataTransferObjects;
 
 namespace Service.Contracts
 {
@@ -9,6 +10,7 @@ namespace Service.Contracts
         CustomerDto CreateCustomerForRestaurant(Guid restaurantId, CustomerForCreationDto customerDto, bool trackChanges);
         void DeleteCustomerForRestaurant(Guid restaurantId, Guid id, bool trackChanges);
         void UpdateCustomerForRestaurant(Guid restaurantId, Guid id, CustomerForUpdateDto customerDto, bool restTrackChanges, bool custTrackChanges);
-
+        (CustomerForUpdateDto customerToPatch, Customer customerEntity) GetCustomerForPatch(Guid restaurantId, Guid id, bool restTrackChanges, bool custTrackChanges);
+        void SaveChangesForPatch(CustomerForUpdateDto customerToPatch, Customer customerEntity);
     }
 }

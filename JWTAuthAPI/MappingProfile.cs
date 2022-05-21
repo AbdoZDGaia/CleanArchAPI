@@ -19,6 +19,7 @@ namespace JWTAuthAPI
             CreateMap<RestaurantForUpdateDto, Restaurant>();
             CreateMap<CustomerForCreationDto, Customer>();
             CreateMap<CustomerForUpdateDto, Customer>();
+            CreateMap<CustomerForUpdateDto, Customer>().ReverseMap();
         }
     }
 }

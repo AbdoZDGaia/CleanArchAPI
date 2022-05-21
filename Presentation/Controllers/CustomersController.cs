@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
 using Shared.DataTransferObjects;
 
@@ -58,6 +59,24 @@ namespace Presentation.Controllers
             }
 
             _service.CustomerService.UpdateCustomerForRestaurant(restaurantId, id, customerDto, restTrackChanges: false, custTrackChanges: true);
+
+            return NoContent();
+        }
+
+        [HttpPatch("{id:guid}")]
+        public IActionResult PartiallyUpdateCustomerForRestaurant(Guid restaurantId, Guid id,
+            [FromBody] JsonPatchDocument<CustomerForUpdateDto> patchDoc)
+        {
+            if (patchDoc == null)
+            {
+                return BadRequest("JsonPatchDocument is null");
+            }
+
+            var result = _service.CustomerService.GetCustomerForPatch(restaurantId, id, false, true);
+
+            patchDoc.ApplyTo(result.customerToPatch);
+
+            _service.CustomerService.SaveChangesForPatch(result.customerToPatch, result.customerEntity);
 
             return NoContent();
         }
