@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Presentation.ActionFilters;
 using Service.Contracts;
 using Shared.DataTransferObjects;
 
@@ -31,13 +32,9 @@ namespace Presentation.Controllers
         }
 
         [HttpPost]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> CreateCustomerForRestaurant(Guid restaurantId, [FromBody] CustomerForCreationDto customerDto)
         {
-            if (customerDto == null)
-            {
-                return BadRequest("CustomerForCreationDto is null");
-            }
-
             var customerToReturn = await _service.CustomerService.CreateCustomerForRestaurantAsync(restaurantId, customerDto, trackChanges: false);
 
             return CreatedAtRoute("GetCustomerForRestaurant", new { restaurantId = restaurantId, id = customerToReturn.Id }, customerToReturn);
@@ -51,27 +48,18 @@ namespace Presentation.Controllers
         }
 
         [HttpPut("{id:guid}")]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> UpdateCustomerForRestaurant(Guid restaurantId, Guid id, [FromBody] CustomerForUpdateDto customerDto)
         {
-            if (customerDto == null)
-            {
-                return BadRequest("CustomerForUpdateDto is null");
-            }
-
             await _service.CustomerService.UpdateCustomerForRestaurantAsync(restaurantId, id, customerDto, restTrackChanges: false, custTrackChanges: true);
-
             return NoContent();
         }
 
         [HttpPatch("{id:guid}")]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> PartiallyUpdateCustomerForRestaurant(Guid restaurantId, Guid id,
             [FromBody] JsonPatchDocument<CustomerForUpdateDto> patchDoc)
         {
-            if (patchDoc == null)
-            {
-                return BadRequest("JsonPatchDocument is null");
-            }
-
             var result = await _service.CustomerService.GetCustomerForPatchAsync(restaurantId, id, false, true);
 
             patchDoc.ApplyTo(result.customerToPatch);

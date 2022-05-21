@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Http.Json;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
@@ -13,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Options;
+using Presentation.ActionFilters;
 
 namespace JWTAuthAPI.Extensions
 {
@@ -37,6 +37,12 @@ namespace JWTAuthAPI.Extensions
             AddSwagger(services);
             AddAuthentication(services);
             AddAutoMapper(services);
+            AddFilters(services);
+        }
+
+        private static void AddFilters(IServiceCollection services)
+        {
+            services.AddScoped<ValidationFilterAttribute>();
         }
 
         private static void ConfigureApiBehavior(IServiceCollection services)

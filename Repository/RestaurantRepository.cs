@@ -14,7 +14,7 @@ namespace Repository
 
         public void DeleteRestaurant(Restaurant restaurant) => Delete(restaurant);
 
-        public async Task<IEnumerable<Restaurant>> GetAllRestaurants(bool trackChanges)
+        public async Task<IEnumerable<Restaurant>> GetAllRestaurantsAsync(bool trackChanges)
         {
             return await FindAll(trackChanges)
                 .OrderBy(restaurant => restaurant.Name)

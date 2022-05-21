@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Presentation.ActionFilters;
 using Presentation.ModelBinders;
 using Service.Contracts;
 using Shared.DataTransferObjects;
@@ -39,13 +40,9 @@ namespace Presentation.Controllers
         }
 
         [HttpPost]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> CreateRestaurant([FromBody] RestaurantForCreationDto restaurant)
         {
-            if (restaurant is null)
-            {
-                return BadRequest("RestaurantForCreationDto object is null");
-            }
-
             var createdRestaurant = await _service.RestaurantService.CreateRestaurantAsync(restaurant);
             return CreatedAtRoute("RestaurantById", new { id = createdRestaurant.Id }, createdRestaurant);
         }
@@ -66,13 +63,10 @@ namespace Presentation.Controllers
         }
 
         [HttpPut("{id:guid}")]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+
         public async Task<IActionResult> UpdateRestaurant(Guid id, [FromBody] RestaurantForUpdateDto restaurant)
         {
-            if (restaurant is null)
-            {
-                return BadRequest("RestaurantForUpdateDto object is null");
-            }
-
             await _service.RestaurantService.UpdateRestaurantAsync(id, restaurant, trackChanges: true);
             return NoContent();
         }

@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace Shared.DataTransferObjects
 {
-    public record RestaurantForUpdateDto
+    public record RestaurantForUpdateDto : RestaurantForManipulationDto
     {
-        public string? Name { get; init; }
-        public string? Location { get; init; }
         public IEnumerable<CustomerForCreationDto>? Customers { get; set; }
     }
 }
