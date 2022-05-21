@@ -32,12 +32,25 @@ namespace JWTAuthAPI.Extensions
             ConfigureServiceManager(services);
             ConfigureSqlContext(services, config);
             ConfigureControllers(services);
+            ConfigureCors(services);
             ConfigureApiBehavior(services);
             AddLogging(services);
             AddSwagger(services);
             AddAuthentication(services);
             AddAutoMapper(services);
             AddFilters(services);
+        }
+
+        public static void ConfigureCors(this IServiceCollection services)
+        {
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy", builder =>
+                builder.AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .WithExposedHeaders("X-Pagination"));
+            });
         }
 
         private static void AddFilters(IServiceCollection services)

@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Presentation.ActionFilters;
 using Service.Contracts;
 using Shared.DataTransferObjects;
+using Shared.RequestFeatures;
 
 namespace Presentation.Controllers
 {
@@ -18,10 +20,13 @@ namespace Presentation.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetCustomersForRestaurant(Guid restaurantId)
+        public async Task<IActionResult> GetCustomersForRestaurant(Guid restaurantId,
+            [FromQuery] CustomerParameters customerParameters)
         {
-            var customers = await _service.CustomerService.GetAllCustomersAsync(restaurantId, trackChanges: false);
-            return Ok(customers);
+            var pagedResult = await _service.CustomerService.GetAllCustomersAsync(restaurantId, customerParameters, trackChanges: false);
+            Response.Headers.Add("X-Pagination",
+                JsonConvert.SerializeObject(pagedResult.metadata!));
+            return Ok(pagedResult.customers);
         }
 
         [HttpGet("{id:guid}", Name = "GetCustomerForRestaurant")]

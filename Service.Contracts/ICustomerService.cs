@@ -1,11 +1,12 @@
 ﻿using Entities;
 using Shared.DataTransferObjects;
+using Shared.RequestFeatures;
 
 namespace Service.Contracts
 {
     public interface ICustomerService
     {
-        Task<IEnumerable<CustomerDto>> GetAllCustomersAsync(Guid restaurantId, bool trackChanges);
+        Task<(IEnumerable<CustomerDto> customers, Metadata metadata)> GetAllCustomersAsync(Guid restaurantId, CustomerParameters customerParameters, bool trackChanges);
         Task<CustomerDto> GetCustomerAsync(Guid restaurantId, Guid id, bool trackChanges);
         Task<CustomerDto> CreateCustomerForRestaurantAsync(Guid restaurantId, CustomerForCreationDto customerDto, bool trackChanges);
         Task DeleteCustomerForRestaurantAsync(Guid restaurantId, Guid id, bool trackChanges);

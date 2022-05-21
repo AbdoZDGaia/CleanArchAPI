@@ -4,6 +4,7 @@ using Entities;
 using Entities.Exceptions;
 using Service.Contracts;
 using Shared.DataTransferObjects;
+using Shared.RequestFeatures;
 
 namespace Service
 {
@@ -23,7 +24,7 @@ namespace Service
         public async Task<CustomerDto> CreateCustomerForRestaurantAsync(Guid restaurantId, CustomerForCreationDto customerDto, bool trackChanges)
         {
             await CheckIfRestaurantExists(restaurantId, trackChanges);
-            
+
             var customerEntity = _mapper.Map<Customer>(customerDto);
 
             _repositoryManager.Customer.CreateCustomerForRestaurant(restaurantId, customerEntity);
@@ -44,13 +45,13 @@ namespace Service
             await _repositoryManager.SaveAsync();
         }
 
-        public async Task<IEnumerable<CustomerDto>> GetAllCustomersAsync(Guid restaurantId, bool trackChanges)
+        public async Task<(IEnumerable<CustomerDto> customers, Metadata metadata)> GetAllCustomersAsync(Guid restaurantId, CustomerParameters customerParameters, bool trackChanges)
         {
             await CheckIfRestaurantExists(restaurantId, trackChanges);
 
-            var customers = await _repositoryManager.Customer.GetAllCustomersAsync(restaurantId, trackChanges);
-            var customersDto = _mapper.Map<IEnumerable<CustomerDto>>(customers);
-            return customersDto;
+            var customersWithMetaData = await _repositoryManager.Customer.GetAllCustomersAsync(restaurantId, customerParameters, trackChanges);
+            var customersDto = _mapper.Map<IEnumerable<CustomerDto>>(customersWithMetaData);
+            return (customers: customersDto, metadata: customersWithMetaData.Metadata!);
         }
 
         public async Task<CustomerDto> GetCustomerAsync(Guid restaurantId, Guid id, bool trackChanges)
