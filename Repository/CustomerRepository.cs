@@ -21,14 +21,15 @@ namespace Repository
 
         public async Task<PagedList<Customer>> GetAllCustomersAsync(Guid restaurantId, CustomerParameters customerParameters, bool trackChanges)
         {
-            var customers = await FindByCondition(c => c.RestaurantId == restaurantId, trackChanges)
+            var customers = await FindByCondition(c => c.RestaurantId == restaurantId &&
+            (c.Age >= customerParameters.MinAge && c.Age <= customerParameters.MaxAge)
+            , trackChanges)
              .OrderBy(c => c.Name)
              .Skip((customerParameters.PageNumber - 1) * customerParameters.PageSize)
              .Take(customerParameters.PageSize)
              .ToListAsync();
 
-            var count = await FindByCondition(e => e.RestaurantId.Equals(restaurantId),
-                trackChanges).CountAsync();
+            var count = customers.Count;
 
             return new PagedList<Customer>(customers,
                 count,

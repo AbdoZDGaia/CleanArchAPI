@@ -47,6 +47,9 @@ namespace Service
 
         public async Task<(IEnumerable<CustomerDto> customers, Metadata metadata)> GetAllCustomersAsync(Guid restaurantId, CustomerParameters customerParameters, bool trackChanges)
         {
+            if (!customerParameters.ValidAge)
+                throw new MaxAgeRangeBadRequestException();
+
             await CheckIfRestaurantExists(restaurantId, trackChanges);
 
             var customersWithMetaData = await _repositoryManager.Customer.GetAllCustomersAsync(restaurantId, customerParameters, trackChanges);
