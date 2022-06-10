@@ -6,5 +6,7 @@
         public uint MinAge { get; set; }
 
         public bool ValidAge => MaxAge >= MinAge;
+
+        public string? SearchTerm { get; set; }
     }
 }

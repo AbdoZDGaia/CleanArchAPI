@@ -2,6 +2,7 @@
 using Contracts;
 using Microsoft.EntityFrameworkCore;
 using Shared.RequestFeatures;
+using Repository.Extensions;
 
 namespace Repository
 {
@@ -21,9 +22,9 @@ namespace Repository
 
         public async Task<PagedList<Customer>> GetAllCustomersAsync(Guid restaurantId, CustomerParameters customerParameters, bool trackChanges)
         {
-            var customers = await FindByCondition(c => c.RestaurantId == restaurantId &&
-            (c.Age >= customerParameters.MinAge && c.Age <= customerParameters.MaxAge)
-            , trackChanges)
+            var customers = await FindByCondition(c => c.RestaurantId == restaurantId, trackChanges)
+             .FilterCustomers(customerParameters.MinAge, customerParameters.MaxAge)
+             .Search(customerParameters.SearchTerm)
              .OrderBy(c => c.Name)
              .Skip((customerParameters.PageNumber - 1) * customerParameters.PageSize)
              .Take(customerParameters.PageSize)
