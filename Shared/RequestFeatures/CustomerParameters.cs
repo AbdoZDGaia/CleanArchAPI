@@ -2,6 +2,8 @@
 {
     public class CustomerParameters : RequestParameters
     {
+        public CustomerParameters() => OrderBy = "Name";
+        
         public uint MaxAge { get; set; } = int.MaxValue;
         public uint MinAge { get; set; }
 

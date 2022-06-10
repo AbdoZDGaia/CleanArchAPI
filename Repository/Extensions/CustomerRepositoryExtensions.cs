@@ -1,9 +1,8 @@
 ﻿using Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Reflection;
+using System.Linq.Dynamic.Core;
 using System.Text;
-using System.Threading.Tasks;
+using Repository.Extensions.Utility;
 
 namespace Repository.Extensions
 {
@@ -27,6 +26,19 @@ namespace Repository.Extensions
                 customers = customers.Where(c => c.Name!.ToLower().Contains(searchTerm.ToLower()));
 
             return customers;
+        }
+
+        public static IQueryable<Customer> Sort(this IQueryable<Customer> customers, string? orderByQueryString)
+        {
+            if (string.IsNullOrWhiteSpace(orderByQueryString))
+                return customers.OrderBy(c => c.Name);
+
+            var orderQuery = OrderQueryBuilder.CreateOrderQuery<Customer>(orderByQueryString);
+
+            if (string.IsNullOrWhiteSpace(orderQuery))
+                return customers.OrderBy(c => c.Name);
+
+            return customers.OrderBy(orderQuery);
         }
     }
 }

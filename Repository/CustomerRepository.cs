@@ -25,7 +25,7 @@ namespace Repository
             var customers = await FindByCondition(c => c.RestaurantId == restaurantId, trackChanges)
              .FilterCustomers(customerParameters.MinAge, customerParameters.MaxAge)
              .Search(customerParameters.SearchTerm)
-             .OrderBy(c => c.Name)
+             .Sort(customerParameters.OrderBy)
              .Skip((customerParameters.PageNumber - 1) * customerParameters.PageSize)
              .Take(customerParameters.PageSize)
              .ToListAsync();
