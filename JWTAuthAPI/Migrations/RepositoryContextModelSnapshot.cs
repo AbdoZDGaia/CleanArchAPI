@@ -29,6 +29,9 @@ namespace JWTAuthAPI.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("CustomerId");
 
+                    b.Property<int>("Age")
+                        .HasColumnType("int");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -57,6 +60,7 @@ namespace JWTAuthAPI.Migrations
                         new
                         {
                             Id = new Guid("80abbca8-664d-4b20-b5de-024705497d4a"),
+                            Age = 34,
                             Email = "Customer1@test.com",
                             Name = "Customer 1",
                             Phone = "123456789",
@@ -65,6 +69,7 @@ namespace JWTAuthAPI.Migrations
                         new
                         {
                             Id = new Guid("b4b3e8a4-7b2b-4b8b-b7c8-024705497d4a"),
+                            Age = 20,
                             Email = "Customer2@test.com",
                             Name = "Customer 2",
                             Phone = "123456789",
@@ -73,6 +78,7 @@ namespace JWTAuthAPI.Migrations
                         new
                         {
                             Id = new Guid("021ca3c1-0deb-4afd-ae94-2159a8479811"),
+                            Age = 55,
                             Email = "Customer3@test.com",
                             Name = "Customer 3",
                             Phone = "123456789",

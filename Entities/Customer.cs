@@ -24,6 +24,10 @@ namespace Entities
         [ForeignKey(nameof(Restaurant))]
         public Guid RestaurantId { get; set; }
 
+        [Required(ErrorMessage = "Age is a required field.")]
+        [Range(6, 100, ErrorMessage = "Age must be between 6 and 100.")]
+        public int Age { get; set; }
+
         public Restaurant? Restaurant { get; set; }
     }
 }

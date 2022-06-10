@@ -12,8 +12,8 @@ using Repository;
 namespace JWTAuthAPI.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    [Migration("20220514053810_DatabaseCreation")]
-    partial class DatabaseCreation
+    [Migration("20220610005620_CreateRestaurantDB")]
+    partial class CreateRestaurantDB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -30,6 +30,9 @@ namespace JWTAuthAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("CustomerId");
+
+                    b.Property<int>("Age")
+                        .HasColumnType("int");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -54,6 +57,35 @@ namespace JWTAuthAPI.Migrations
                     b.HasIndex("RestaurantId");
 
                     b.ToTable("Customers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("80abbca8-664d-4b20-b5de-024705497d4a"),
+                            Age = 34,
+                            Email = "Customer1@test.com",
+                            Name = "Customer 1",
+                            Phone = "123456789",
+                            RestaurantId = new Guid("c9d4c053-49b6-410c-bc78-2d54a9991870")
+                        },
+                        new
+                        {
+                            Id = new Guid("b4b3e8a4-7b2b-4b8b-b7c8-024705497d4a"),
+                            Age = 20,
+                            Email = "Customer2@test.com",
+                            Name = "Customer 2",
+                            Phone = "123456789",
+                            RestaurantId = new Guid("3d490a70-94ce-4d15-9494-5248280c2ce3")
+                        },
+                        new
+                        {
+                            Id = new Guid("021ca3c1-0deb-4afd-ae94-2159a8479811"),
+                            Age = 55,
+                            Email = "Customer3@test.com",
+                            Name = "Customer 3",
+                            Phone = "123456789",
+                            RestaurantId = new Guid("3d490a70-94ce-4d15-9494-5248280c2ce3")
+                        });
                 });
 
             modelBuilder.Entity("Entities.Restaurant", b =>
@@ -76,6 +108,26 @@ namespace JWTAuthAPI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Restaurants");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("c9d4c053-49b6-410c-bc78-2d54a9991870"),
+                            Location = "Location 1",
+                            Name = "Restaurant 1"
+                        },
+                        new
+                        {
+                            Id = new Guid("3d490a70-94ce-4d15-9494-5248280c2ce3"),
+                            Location = "Location 2",
+                            Name = "Restaurant 2"
+                        },
+                        new
+                        {
+                            Id = new Guid("3d490b70-94be-4d35-9424-5248412c2ca4"),
+                            Location = "Location 3",
+                            Name = "Restaurant 3"
+                        });
                 });
 
             modelBuilder.Entity("Entities.Customer", b =>
