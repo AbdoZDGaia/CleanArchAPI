@@ -73,7 +73,7 @@ namespace JWTAuthAPI.Extensions
 
         private static void ConfigureControllers(IServiceCollection services)
         {
-            NewtonsoftJsonPatchInputFormatter GetJsonPatchInputFormatter() =>
+            static NewtonsoftJsonPatchInputFormatter GetJsonPatchInputFormatter() =>
                 new ServiceCollection().AddLogging().AddMvc().AddNewtonsoftJson()
                 .Services.BuildServiceProvider()
                 .GetRequiredService<IOptions<MvcOptions>>().Value.InputFormatters

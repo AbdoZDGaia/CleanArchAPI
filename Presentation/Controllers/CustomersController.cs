@@ -23,10 +23,10 @@ namespace Presentation.Controllers
         public async Task<IActionResult> GetCustomersForRestaurant(Guid restaurantId,
             [FromQuery] CustomerParameters customerParameters)
         {
-            var pagedResult = await _service.CustomerService.GetAllCustomersAsync(restaurantId, customerParameters, trackChanges: false);
+            var (customers, metadata) = await _service.CustomerService.GetAllCustomersAsync(restaurantId, customerParameters, trackChanges: false);
             Response.Headers.Add("X-Pagination",
-                JsonConvert.SerializeObject(pagedResult.metadata!));
-            return Ok(pagedResult.customers);
+                JsonConvert.SerializeObject(metadata!));
+            return Ok(customers);
         }
 
         [HttpGet("{id:guid}", Name = "GetCustomerForRestaurant")]
@@ -42,7 +42,7 @@ namespace Presentation.Controllers
         {
             var customerToReturn = await _service.CustomerService.CreateCustomerForRestaurantAsync(restaurantId, customerDto, trackChanges: false);
 
-            return CreatedAtRoute("GetCustomerForRestaurant", new { restaurantId = restaurantId, id = customerToReturn.Id }, customerToReturn);
+            return CreatedAtRoute("GetCustomerForRestaurant", new { restaurantId, id = customerToReturn.Id }, customerToReturn);
         }
 
         [HttpDelete("{id:guid}")]
@@ -65,11 +65,11 @@ namespace Presentation.Controllers
         public async Task<IActionResult> PartiallyUpdateCustomerForRestaurant(Guid restaurantId, Guid id,
             [FromBody] JsonPatchDocument<CustomerForUpdateDto> patchDoc)
         {
-            var result = await _service.CustomerService.GetCustomerForPatchAsync(restaurantId, id, false, true);
+            var (customerToPatch, customerEntity) = await _service.CustomerService.GetCustomerForPatchAsync(restaurantId, id, false, true);
 
-            patchDoc.ApplyTo(result.customerToPatch);
+            patchDoc.ApplyTo(customerToPatch);
 
-            await _service.CustomerService.SaveChangesForPatchAsync(result.customerToPatch, result.customerEntity);
+            await _service.CustomerService.SaveChangesForPatchAsync(customerToPatch, customerEntity);
 
             return NoContent();
         }
